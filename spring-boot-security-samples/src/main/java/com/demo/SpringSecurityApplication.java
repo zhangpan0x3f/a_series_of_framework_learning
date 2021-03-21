@@ -7,7 +7,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 
 /**
  * @author zhang pan
- * @Description 类描述
+ * @Description 启动类
  */
 @SpringBootApplication
 @MapperScan("com.demo.mapper")

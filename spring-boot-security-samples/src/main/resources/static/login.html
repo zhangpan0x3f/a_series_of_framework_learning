@@ -15,6 +15,7 @@
     <div class="box">
         <div class="title">江南一点雨-登录</div>
         <form action="/user/login" method="post">
+<!--            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />-->
             <div class="input">
                 <label for="name">用户名</label>
                 <input type="text" name="username" id="name">
@@ -25,6 +26,7 @@
                 <input type="password" name="password" id="pass">
                 <span class="spin"></span>
             </div>
+            自动登录<input type="checkbox" name="remember-me">
             <div class="button login">
                 <button type="submit">
                     <span>登录</span>

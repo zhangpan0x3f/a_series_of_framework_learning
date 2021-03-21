@@ -32,7 +32,7 @@ public class MyUserDetailsService implements UserDetailsService {
         wrapper.eq("username", username);
         Users users = userMapper.selectOne(wrapper);
         if(users != null){
-            List<GrantedAuthority> auths = AuthorityUtils.commaSeparatedStringToAuthorityList("ROLE_user");
+            List<GrantedAuthority> auths = AuthorityUtils.commaSeparatedStringToAuthorityList("ROLE_admin");
             return new User(users.getUsername(),users.getPassword(),auths);
         }else{
             throw new UsernameNotFoundException("用户名不存在！");
