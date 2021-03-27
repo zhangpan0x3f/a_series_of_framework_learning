@@ -13,6 +13,7 @@
         <module>spring-boot-dubbo-samples</module>
         <module>spring-boot-spring-samples</module>
         <module>spring-boot-jackson-samples</module>
+        <module>spring-boot-mybatis-samples</module>
     </modules>
 
     <properties>
@@ -20,6 +21,7 @@
         <maven.compiler.target>8</maven.compiler.target>
         <junit-version>4.13.1</junit-version>
         <mysql-connector-version>8.0.22</mysql-connector-version>
+        <mybatis-spring-boot-starter>2.1.3</mybatis-spring-boot-starter>
     </properties>
 
     <dependencyManagement>
@@ -44,6 +46,12 @@
                 <groupId>mysql</groupId>
                 <artifactId>mysql-connector-java</artifactId>
                 <version>${mysql-connector-version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.mybatis.spring.boot</groupId>
+                <artifactId>mybatis-spring-boot-starter</artifactId>
+                <version>${mybatis-spring-boot-starter}</version>
             </dependency>
 
         </dependencies>
