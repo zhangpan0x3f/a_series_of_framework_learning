@@ -11,6 +11,8 @@
     <modules>
         <module>spring-boot-security-samples</module>
         <module>spring-boot-dubbo-samples</module>
+        <module>spring-boot-spring-samples</module>
+        <module>spring-boot-jackson-samples</module>
     </modules>
 
     <properties>

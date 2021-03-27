@@ -1,4 +1,4 @@
-package com.atguigu.utils.utils;
+package com.demo.utils;
 
 import lombok.Data;
 import java.util.HashMap;

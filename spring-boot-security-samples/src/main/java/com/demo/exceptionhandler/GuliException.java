@@ -1,4 +1,4 @@
-package com.atguigu.utils.exceptionhandler;
+package com.demo.exceptionhandler;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
