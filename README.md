@@ -1,7 +1,7 @@
 # a_series_of_framework_learning
 一系列框架的学习
 
-##1.jackson介绍
+## 1.jackson介绍
 
 **json语法规则**
 ```
