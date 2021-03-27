@@ -71,3 +71,58 @@ null
     </dependency>
 </dependencies>
 ```
+**数据源配置**
+```properties
+#数据源配置
+spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+spring.datasource.url=jdbc:mysql://localhost:3306/essm?useUnicode=true&characterEncoding=utf8&serverTimezone=GMT%2B8&useSSL=false
+spring.datasource.username=root
+spring.datasource.password=root
+```
+
+**mybatis的一些配置**
+```properties
+mybatis.mapper-locations=classpath:mapper/*Mapper.xml
+#控制台打印sql语句
+mybatis.configuration.log-impl= org.apache.ibatis.logging.stdout.StdOutImpl
+```
+
+**作用域和生命周期**
+```markdown
+1.SqlSessionFactoryBuilder
+这个类可以被实例化、使用和丢弃，一旦创建了 SqlSessionFactory，就不再需要它了。 因此 SqlSessionFactoryBuilder 实例的最佳作用域是方法作用域（也就是局部方法变量）。
+
+2.SqlSessionFactory
+SqlSessionFactory 一旦被创建就应该在应用的运行期间一直存在，没有任何理由丢弃它或重新创建另一个实例。
+
+3.SqlSession
+最佳的作用域是请求或方法作用域
+```
+
+**类的属性和表的字段名对应**
+```xml
+    <!--如果列名和属性名不能匹配上，可以在 SELECT 语句中设置列别名-->
+    <select id="selectUsers" resultType="User">
+        select
+               表的字段名             类的属性名
+            user_id             as "id",
+            user_name           as "userName",
+            hashed_password     as "hashedPassword"
+        from some_table
+        where id = #{id}
+    </select>
+
+        <!--类属性名和表的列名对应-->
+    <resultMap id="userResultMap" type="User">
+        <id property="id" column="user_id" />
+        <result property="username" column="user_name"/>
+        <result property="password" column="hashed_password"/>
+    </resultMap>
+
+    <select id="selectUsers" resultMap="userResultMap">
+        select user_id, user_name, hashed_password
+        from some_table
+        where id = #{id}
+    </select>
+```
+

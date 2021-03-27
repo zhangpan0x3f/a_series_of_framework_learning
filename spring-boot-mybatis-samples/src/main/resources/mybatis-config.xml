@@ -3,18 +3,45 @@
         PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration>
-    <environments default="development">
-        <environment id="development">
+
+    <!--配置属性的值-->
+    <properties resource="config.properties">
+        <property name="username" value="root"/>
+        <property name="password" value="root"/>
+        <property name="org.apache.ibatis.parsing.PropertyParser.enable-default-value" value="true"/> <!-- 启用默认值特性 -->
+        <property name="org.apache.ibatis.parsing.PropertyParser.default-value-separator" value="?:"/> <!-- 修改默认值的分隔符 -->
+    </properties>
+
+    <!--类型别名可为 Java 类型设置一个缩写名字。 它仅用于 XML 配置，意在降低冗余的全限定类名书写。例如：-->
+    <typeAliases>
+        <typeAlias alias="Blog" type="com.demo.entity.Blog"/>
+<!--        也可以指定一个包名，MyBatis 会在包名下面搜索需要的 Java Bean-->
+        <package name="com.demo.entity"/>
+    </typeAliases>
+
+    <typeHandlers>
+        <typeHandler handler="org.mybatis.example.ExampleTypeHandler"/>
+    </typeHandlers>
+
+    <!--这个例子中的 username 和 password 将会由 properties 元素中设置的相应值来替换。 driver 和 url 属性将会由 config.properties 文件中对应的值来替换-->
+    <environments default="mysql">
+        <environment id="mysql">
             <transactionManager type="JDBC"/>
             <dataSource type="POOLED">
                 <property name="driver" value="${driver}"/>
                 <property name="url" value="${url}"/>
                 <property name="username" value="${username}"/>
+                <!-- 如果属性 'username' 没有被配置，'username' 属性的值将为 'ut_user' -->
+<!--                <property name="username" value="${username:ut_user}"/> -->
                 <property name="password" value="${password}"/>
             </dataSource>
         </environment>
     </environments>
+
+    <!-- 使用相对于类路径的资源引用 -->
     <mappers>
-        <mapper resource="org/mybatis/example/BlogMapper.xml"/>
+        <mapper resource="/mapper/*Mapper.xml"/>
+        <package name="com.demo.mapper`"/>
     </mappers>
+
 </configuration>
