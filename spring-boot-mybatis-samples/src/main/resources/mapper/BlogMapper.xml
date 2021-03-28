@@ -10,7 +10,7 @@
     <!--
         cache：该命名空间的缓存配置。
         cache-ref：引用其它命名空间的缓存配置。
-        resultMap：描述如何从数据库结果集中加载对象
+        resultMap：自定义结果集映射规则
         sql：可被其它语句引用的可重用语句块。
         insert：映射插入语句。
         update：映射更新语句。
@@ -174,9 +174,20 @@
         from some_table
         where id = #{id}
     </select>
-    <!--类属性名和表的列名对应-->
+    <!--自定义某个javaBean的封装规则
+        type：自定义规则的Java类型
+        id：唯一id方便引用
+    -->
     <resultMap id="userResultMap" type="User">
+        <!--id：指定主键列的封装规则
+        property：指定对应的javabean属性
+        column：数据库的列名
+        -->
         <id property="id" column="user_id" />
+        <!--result：定义普通列的封装规则
+        property：指定对应的javabean属性
+        column：数据库的列名
+        -->
         <result property="username" column="user_name"/>
         <result property="password" column="hashed_password"/>
     </resultMap>
@@ -212,6 +223,10 @@
             <idArg column="blog_id" javaType="int"/>
         </constructor>
         <result property="title" column="blog_title"/>
+        <!--association可以指定联合的javaBean对象
+            property：指定哪个属性是联合的对象
+            javaType：指定这个属性对象的类型[不能省略]
+        -->
         <association property="author" javaType="Author">
             <id property="id" column="author_id"/>
             <result property="username" column="author_username"/>
@@ -220,7 +235,11 @@
             <result property="bio" column="author_bio"/>
             <result property="favouriteSection" column="author_favourite_section"/>
         </association>
+        <!--collection定义关联集合类型的属性的封装规则
+        ofType：指定集合里面元素的类型
+        -->
         <collection property="posts" ofType="Post">
+            <!--定义这个集合中元素的封装规则-->
             <id property="id" column="post_id"/>
             <result property="subject" column="post_subject"/>
             <association property="author" javaType="Author"/>
@@ -230,14 +249,140 @@
             <collection property="tags" ofType="Tag" >
                 <id property="id" column="tag_id"/>
             </collection>
+            <!--鉴别器：mybatis可以使用discriminator判断某列的值，然后根据某列的值改变封装行为
+                column：指定判断的列名
+                javaType：列值对应的java类型
+            -->
             <discriminator javaType="int" column="draft">
                 <case value="1" resultType="DraftPost"/>
             </discriminator>
         </collection>
     </resultMap>
 
+    <!--分步查询-->
+    <resultMap id="blogResult" type="Blog">
+    <!--association定义关联对象的封装规则
+        select：表明当前属性是调用select指定的方法查出的结果
+        column：指定将哪一列的值传给这个方法
+    -->
+        <association property="author" column="author_id" javaType="Author" select="selectAuthor"/>
+    </resultMap>
+
+    <select id="selectBlog" resultMap="blogResult">
+        SELECT * FROM BLOG WHERE ID = #{id}
+    </select>
+
+    <select id="selectAuthor" resultType="Author">
+        SELECT * FROM AUTHOR WHERE ID = #{id}
+    </select>
+
+    <!--集合的嵌套 Select 查询-->
+    <resultMap id="blogResult" type="Blog">
+        <collection property="posts" javaType="ArrayList" column="id" ofType="Post" select="selectPostsForBlog"/>
+    </resultMap>
+
+    <select id="selectBlog" resultMap="blogResult">
+        SELECT * FROM BLOG WHERE ID = #{id}
+    </select>
+
+    <select id="selectPostsForBlog" resultType="Post">
+        SELECT * FROM POST WHERE BLOG_ID = #{id}
+    </select>
+
+    <!--扩展：多列的值传递过去
+            将多列的值封装map传递
+            column="{key1=column1,key2=column2}"
+            fetchType=lazy表示使用延迟加载
+            eager：立即加载
+    -->
+
+
     <!--id & result-->
     <id property="id" column="post_id"/>
     <result property="subject" column="post_subject"/>
+
+    <!--id与result的区别-->
+
+
+    <!--动态sql-->
+
+    <select id="findActiveBlogLike" resultType="com.demo.entity.Blog">
+        select * from blog where state = 'ACTIVE'
+        <if test="title != null">
+            and title like #{title}
+        </if>
+        <if test="author != null and author.name != null">
+            and author_name like #{author.name}
+        </if>
+    </select>
+
+    <!--从多个条件中选择一个使用-->
+    <select id="findActiveBlogLike" resultType="Blog">
+        select * from blog where state = 'ACTIVE'
+        <choose>   <!--相当于switch-->
+            <when test="title != null">    <!--相当于case-->
+                and title like #{title}
+            </when>
+            <when test="author != null and author.name != null">
+                and author_name like #{author.name}
+            </when>
+            <otherwise>    <!--相当于default-->
+                and featured = 1
+            </otherwise>
+        </choose>
+    </select>
+
+    <!--建议使用这种方式-->
+    <select id="findActiveBlogLike"
+            resultType="Blog">
+        SELECT * FROM BLOG
+        <where>
+            <if test="state != null">
+                state = #{state}
+            </if>
+            <if test="title != null">
+                AND title like #{title}
+            </if>
+            <if test="author != null and author.name != null">
+                AND author_name like #{author.name}
+            </if>
+        </where>
+    </select>
+
+    <!--可以通过自定义 trim 元素来定制 where 元素的功能-->
+    <trim prefix="WHERE" prefixOverrides="AND |OR ">
+        ...
+    </trim>
+
+    <!--用于动态更新语句的类似解决方案叫做 set-->
+    <update id="updateAuthorIfNecessary">
+        update Author
+        <set>
+            <if test="username != null">username=#{username},</if>
+            <if test="password != null">password=#{password},</if>
+            <if test="email != null">email=#{email},</if>
+            <if test="bio != null">bio=#{bio}</if>
+        </set>
+        where id=#{id}
+    </update>
+
+    <!--对集合进行遍历（尤其是在构建 IN 条件语句的时候）-->
+    <!--index 是当前迭代的序号，item 的值是本次迭代获取到的元素。当使用 Map 对象（或者 Map.Entry 对象的集合）时，index 是键，item 是值。-->
+    <select id="selectPostIn" resultType="domain.blog.Post">
+        SELECT *
+        FROM POST P
+        WHERE ID in
+        <foreach item="item" index="index" collection="list"
+                 open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+    <!--bind 元素允许你在 OGNL 表达式以外创建一个变量，并将其绑定到当前的上下文。-->
+    <select id="selectBlogsLike" resultType="Blog">
+        <bind name="pattern" value="'%' + _parameter.getTitle() + '%'" />
+        SELECT * FROM BLOG
+        WHERE title LIKE #{pattern}
+    </select>
 
 </mapper>
