@@ -1,22 +1,25 @@
-package com.demo.model;
+package com.demo.ioc.model;
 
 /**
  * @author : zhang pan
- * @date : 5:49 下午 2021/7/6
+ * @date : 2:24 下午 2021/7/13
  * 描述：
  */
-public class User {
+public class Person{
 
     private String name;
 
     private Integer age;
 
-    public User() {
+    private Address address;
+
+    public Person() {
     }
 
-    public User(String name, Integer age) {
+    public Person(String name, Integer age, Address address) {
         this.name = name;
         this.age = age;
+        this.address = address;
     }
 
     public String getName() {
@@ -35,11 +38,20 @@ public class User {
         this.age = age;
     }
 
+    public Address getAddress() {
+        return address;
+    }
+
+    public void setAddress(Address address) {
+        this.address = address;
+    }
+
     @Override
     public String toString() {
-        return "User{" +
+        return "Person{" +
                 "name='" + name + '\'' +
                 ", age=" + age +
+                ", address=" + address +
                 '}';
     }
 }

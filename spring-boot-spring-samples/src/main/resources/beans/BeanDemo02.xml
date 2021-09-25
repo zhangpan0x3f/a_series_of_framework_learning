@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--基于构造器的依赖注入-->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="address1" class="com.demo.ioc.model.Address">
+        <property name="province" value="湖北省"/>
+        <property name="city" value="武汉市"/>
+        <property name="area" value="黄陂区"/>
+    </bean>
+
+    <!--构造器类型匹配-->
+    <bean id="address2" class="com.demo.ioc.model.Address">
+        <constructor-arg type="java.lang.String" value="浙江省"/>
+        <constructor-arg type="java.lang.String" value="杭州市"/>
+        <constructor-arg type="java.lang.String" value="西湖区"/>
+    </bean>
+
+    <!--构造器索引匹配，索引从0开始-->
+    <bean id="address3" class="com.demo.ioc.model.Address">
+        <constructor-arg index="0" value="四川省"/>
+        <constructor-arg index="1" value="成都市"/>
+        <constructor-arg index="2" value="高新区"/>
+    </bean>
+
+    <!--构造器参数名称-->
+    <bean id="person1" class="com.demo.ioc.model.Person">
+        <constructor-arg name="name" value="zs"/>
+        <constructor-arg name="age" value="18"/>
+        <constructor-arg name="address" ref="address1"/>
+    </bean>
+
+</beans>

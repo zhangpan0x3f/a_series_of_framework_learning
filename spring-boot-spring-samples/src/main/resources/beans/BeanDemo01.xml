@@ -4,16 +4,39 @@
 
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd">
 
-    <bean id="user1" class="com.demo.model.User">
-        <!-- collaborators and configuration for this bean go here -->
+    <!--
+    id：The id attribute is a string that identifies the individual com.demo.ioc.service.bean definition.
+    class：The class attribute defines the type of the com.demo.ioc.service.bean and uses the fully qualified classname.
+    -->
+    <bean id="user1" class="com.demo.ioc.model.User">
+        <!-- collaborators and configuration for this com.demo.ioc.service.bean go here -->
         <property name="name" value="zs"/>
         <property name="age" value="18"/>
     </bean>
 
-    <bean id="user2" class="com.demo.model.User">
-        <!-- collaborators and configuration for this bean go here -->
+    <bean id="user2" class="com.demo.ioc.model.User">
+        <!-- collaborators and configuration for this com.demo.ioc.service.bean go here -->
     </bean>
 
-    <!-- more bean definitions go here -->
+    <bean id="user3" name="user" class="com.demo.ioc.model.User">
+
+    </bean>
+<!--    <bean name="user4" class="com.demo.ioc.model.User"></bean>-->
+
+    <!--静态工厂方法-->
+    <bean id="user5" class="com.demo.ioc.model.User" factory-method="createUser">
+
+    </bean>
+
+    <!--实例工厂方法-->
+    <bean id="user6" class="com.demo.ioc.model.User"></bean>
+    <bean id="user7" factory-bean="user6" factory-method="createInstanceUser"></bean>
+
+    <!-- more com.demo.ioc.service.bean definitions go here -->
+
+    <!--引入其他xml-->
+<!--    <import resource="daos.xml"/>-->
+    <!--定义别名-->
+    <alias name="user" alias="userAlias"/>
 
 </beans>

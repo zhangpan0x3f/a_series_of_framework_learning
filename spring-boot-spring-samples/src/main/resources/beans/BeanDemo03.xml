@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--基于setter方法的依赖注入-->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!-- setter injection using the nested ref element -->
+    <bean id="a" class="com.demo.ioc.model.A">
+        <property name="b">
+            <ref bean="b"/>
+        </property>
+    </bean>
+
+    <!-- setter injection using the neater ref attribute -->
+    <bean id="b" class="com.demo.ioc.model.B">
+        <property name="a" ref="a"/>
+    </bean>
+
+</beans>

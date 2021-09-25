@@ -1,5 +1,7 @@
 package com.demo.controller;
 
+import com.demo.service.Impl.DistributedLocks;
+import com.demo.service.JedisService;
 import com.demo.service.TestService;
 import com.wf.captcha.utils.CaptchaUtil;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +21,12 @@ public class TestController {
     @Resource
     private TestService testService;
 
+    @Resource
+    private JedisService jedisService;
+
+    @Resource
+    private DistributedLocks distributedLocks;
+
     @PostMapping("/value")
     public String setValue(@RequestParam String key,@RequestParam String value){
         testService.setValue(key, value);
@@ -33,6 +41,12 @@ public class TestController {
     @RequestMapping("/captcha")
     public void captcha(HttpServletRequest request, HttpServletResponse response) throws Exception {
         CaptchaUtil.out(request, response);
+    }
+
+    @GetMapping("/get")
+    public String get(){
+        jedisService.get();
+        return "ok";
     }
     
 }

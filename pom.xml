@@ -19,6 +19,8 @@
         <module>spring-boot-test-sample</module>
         <module>spring-boot-jpa-samples</module>
         <module>spring-boot-redis-samples</module>
+        <module>spring-boot-quartz-samples</module>
+        <module>spring-boot-linux-samples</module>
     </modules>
 
     <properties>
